@@ -1,0 +1,61 @@
+{% extends "restaurant/base.html" %}
+{% block content %}
+
+<div class="p-5">
+    <form class="user" method="post" action="{%url 'updateRestaurant' restaurant_list.id%}">
+        {%csrf_token %}
+        <div class="form-group row">
+            <div class="col-sm-6">
+                <input type="text" value="{{restaurant_list.name}}" class="form-control form-control-user" name="name"
+                    placeholder="Enter Name of Restaurant">
+            </div>
+
+        </div>
+        <div class="form-group row">
+            <div class="col-sm-6">
+                <input name="contact_number" type="number" value="{{restaurant_list.contact_number}}"
+                    class="form-control form-control-user" placeholder="Enter Contact Number">
+            </div>
+
+        </div>
+
+        <div class="form-group">
+            <label for="sel1">Select cuisine (select one):</label>
+            <select name="cuisine" class="form-control" id="sel1">
+                <option value="{{restaurant_list.cuisine}}">{{restaurant_list.cuisine}}</option>
+                <option value="North Indian">North Indian</option>
+                <option value="South Indian">South Indian</option>
+                <option value="Continental">Continental</option>
+                <option value="Gujarati">Gujarati</option>
+                <option value="Marathi">Marathi</option>
+                <option value="Punjabi">Punjabi</option>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <input type="text" value="{{restaurant_list.address}}" name="address" class="form-control form-control-user"
+                placeholder="Enter Restaurant's Address">
+        </div>
+        {%if restaurant_list.status == "opened" %}
+        <div class="form-group">
+            <input type="radio" name="status" class="form-control-user" value="opened"
+                checked="checked"> Opened
+            <div class="form-group">
+                <input type="radio" name="status" class="form-control-user" value="closed"> Closed
+            </div>
+        </div>
+        {% else%}
+        <div class="form-group">
+            <input type="radio" name="status" class="form-control-user" value="opened"> Opened
+            <div class="form-group">
+                <input type="radio" name="status" class="form-control-user" checked value="closed"> Closed
+            </div>
+        </div>
+        {% endif%}
+
+
+        <button type="submit" class="btn btn-facebook btn-user btn-block">Add Restaurant
+        </button>
+    </form>
+</div>
+{% endblock%}

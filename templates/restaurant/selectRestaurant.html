@@ -1,0 +1,43 @@
+{% extends "restaurant/base.html" %}
+{% block content %}
+
+<div class="container-fluid">
+    <div class="row">
+
+        <h1 class="h3 mb-0 text-gray-800">Best Selling Dishes</h1>
+
+        <div class="table-responsive">
+            <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                <thead>
+                    <tr>
+                        <th>Restauarnt Name</th>
+                        <th>Restauarnt Contact Number</th>
+                        <th>Restauarnt Address</th>
+                        <th>Restauarnt Cuisine</th>
+                        <th>Restauarnt Status</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    {%for restaurant_list in restaurant_list%}
+                    <tr>
+                        <td>{{restaurant_list.name}}</td>
+                        <td>{{restaurant_list.contact_number}}</td>
+                        <td>{{restaurant_list.address}}</td>
+                        <td>{{restaurant_list.cuisine}}</td>
+                        <td>{{restaurant_list.status}}</td>
+                        <td>
+                            <a href="{%url 'selectFooditem' restaurant_list.id%}" class="btn btn-primary">
+                                View Food
+                                Items</a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+    </div>
+</div>
+{%endblock%}

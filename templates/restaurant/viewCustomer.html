@@ -1,0 +1,44 @@
+{% extends "restaurant/base.html" %}
+{% block content %}
+
+<div class="container-fluid">
+    <div class="row">
+
+        <h1 class="h3 mb-0 text-gray-800">Customers</h1>
+
+        <div class="table-responsive">
+            <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                <thead>
+                    <tr>
+                        <th>Customer Name</th>
+                        <th>Transaction Id</th>
+                        <th>Restauarnt</th>
+                        <th>Created At</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    {%for order_list in order_list%}
+                    <tr>
+                        <td>{{order_list.customer_name}}</td>
+                        <td>{{order_list.transaction_id}}</td>
+                        <td>{{order_list.restaurant.name}}</td>
+                        <td>{{order_list.createdAt}}</td>
+                        <td>
+                            <a href="{%url 'viewFoodItemToOrder' order_list.id%}"
+                                class="btn btn-info btn-sm btn-circle">
+                                <i class="fas fa-plus"></i>
+                            </a>
+                            
+
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+    </div>
+</div>
+{%endblock%}

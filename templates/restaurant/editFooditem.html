@@ -1,0 +1,37 @@
+{% extends "restaurant/base.html" %}
+{% block content %}
+
+<div class="p-5">
+    <form class="user" method="post" action="{%url 'updateFooditem' fooditem_list.id%}">
+        {%csrf_token %}
+        <div class="form-group">
+            <label for="sel1">Select Restaurant (select one):</label>
+            <select name="restaurant" class="form-control" id="sel1">
+                {%if fooditem_list.restaurant%}
+                <option value="{{fooditem_list.restaurant.id}}">{{fooditem_list.restaurant.name}}</option>
+                {%endif%}
+                {%for restaurant_list in restaurant_list %}
+                <option value="{{restaurant_list.id}}">{{restaurant_list.name}}</option>
+                {%endfor %}
+
+            </select>
+        </div>
+        <div class="form-group row">
+            <div class="col-sm-6">
+                <input type="text" class="form-control form-control-user" value="{{fooditem_list.name}}" name="name"
+                    placeholder="Enter Name of Food Item">
+            </div>
+
+        </div>
+        <div class="form-group row">
+            <div class="col-sm-6">
+                <input name="price" value="{{fooditem_list.price}}" type="number" class="form-control form-control-user"
+                    placeholder="Enter Unit Price">
+            </div>
+
+        </div>
+        <button type="submit" class="btn btn-facebook btn-user btn-block">Update Food item
+        </button>
+    </form>
+</div>
+{% endblock%}

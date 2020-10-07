@@ -1,0 +1,122 @@
+{%load static%}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="images/favicon.png" rel="icon" />
+    <title>Invoice</title>
+    <meta name="author" content="harnishdesign.net">
+
+    <!-- Web Fonts
+======================= -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.9.2/html2pdf.bundle.js"></script>
+
+    <link rel="stylesheet" type="text/css" href="{% static 'restaurant/invoice/pdf.css'%}" />
+
+    <link rel='stylesheet' href='https://fonts.googleapis.com/css?family=Poppins:100,200,300,400,500,600,700,800,900'
+        type='text/css'>
+
+    <!-- Stylesheet
+======================= -->
+    <link rel="stylesheet" type="text/css" href="{% static 'restaurant/invoice/bootstrap.min.css'%}" />
+    <link rel="stylesheet" type="text/css" href="{% static 'restaurant/invoice/invoice.css'%}" />
+    <link rel="stylesheet" type="text/css" href="{% static 'restaurant/invoice/invoice2.css'%}" />
+    <script>window.onload = function () {
+            document.getElementById("download").addEventListener("click", () => {
+                const invoice = this.document.getElementById("invoice");
+                console.log(invoice);
+                console.log(window);
+                var opt = {
+                    margin: 1,
+                    filename: "myfile.pdf",
+                    image: { type: "jpeg", quality: 0.98 },
+                    html2canvas: { scale: 2 },
+                    jsPDF: { unit: "in", format: "letter", orientation: "portrait" },
+                };
+                html2pdf().from(invoice).set(opt).save();
+            });
+        };</script>
+</head>
+
+<body>
+
+    <!-- Container -->
+    <div class="container-fluid invoice-container">
+        <div id="invoice">
+            <!-- Header -->
+            <header>
+
+                <div class="col-sm-12 text-center">
+                    <h4 class="text-7 mb-0">Invoice</h4>
+                </div>
+                <hr>
+            </header>
+
+            <!-- Main Content -->
+            <main>
+                <div class="row">
+                    <div class="col-sm-6"><strong>Date:</strong> {{order.createdAt}}</div>
+                    <div class="col-sm-6 text-sm-right"> <strong>Transaction ID:</strong> {{order.transaction_id}}</div>
+
+                </div>
+                <hr>
+                <div class="row">
+                    <div class="col-sm-6 text-sm-right order-sm-1"> <strong>Pay To:</strong> {{order.restaurant.name}}
+                        <br> Address:- {{order.restaurant.address}}
+                        <br>Contact Number:- {{order.restaurant.contact_number}}
+                    </div>
+                    <div class="col-sm-6 order-sm-0"> <strong>Invoiced To:</strong>
+                        {{order.customer_name}}
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="card-header px-2 py-0">
+                        <table class="table mb-0">
+                            <thead>
+                                <tr>
+                                    <td class="text-center"><strong>Food Item</strong></td>
+                                    <td class="text-center"><strong>Unit Rate</strong></td>
+                                    <td class="text-center"><strong>QTY</strong></td>
+                                    <td class="text-center"><strong>Sub Total</strong></td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {%for order_details in order_details %}
+                                <tr>
+                                    <td class="text-center">{{order_details.food_item.name}}</td>
+                                    <td class="text-center">{{order_details.food_item.price}}</td>
+                                    <td class="text-center">{{order_details.quantity}}</td>
+                                    <td class="text-center">{{order_details.item_price_total}}</td>
+                                </tr>
+                                {%endfor %}
+
+
+
+                                <tr>
+                                    <td colspan="3" class="bg-light-2 text-right"><strong>Grand Total:</strong></td>
+                                    <td class="bg-light-2 text-center">{{total_amount}}/-</td>
+                                </tr>
+
+
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </main>
+            <!-- Footer -->
+            <footer class="text-center mt-4">
+
+
+            </footer>
+        </div>
+    </div>
+    <div class="col-sm-12 text-center">
+        <button class="btn btn-primary" id="download">
+            Download PDF</button>
+    </div>
+</body>
+
+</html>
