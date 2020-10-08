@@ -93,33 +93,7 @@
 
     <!-- Content Row -->
 
-    <div class="row">
-
-        <h1 class="h3 mb-0 text-gray-800">Restaurant Sales Till Now</h1>
-
-        <div class="table-responsive">
-            <table class="table table-bordered table-condensed table-hover table-striped" id="dataTable" width="100%"
-                cellspacing="0">
-                <thead>
-                    <tr>
-                        <th>Restaurant Name</th>
-                        <th>Sales in rupees</th>
-                    </tr>
-                </thead>
-
-                <tbody>
-                    {%for k in res_total.items %}
-                    <tr>
-                        <td>{{res_total|dict_key:k}} </td>
-                        <td>{{key}}:{{value}}</td>
-                    </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
-        </div>
-
-    </div>
-
+  
 
     <!-- Content Row -->
     <div class="row">
