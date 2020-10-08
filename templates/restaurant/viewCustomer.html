@@ -26,11 +26,17 @@
                         <td>{{order_list.restaurant.name}}</td>
                         <td>{{order_list.createdAt}}</td>
                         <td>
+                            {%if order_list.invoiceGenerated%}
+
+                            <span class="btn btn-info">Invoice Already Generated</span>
+                            {%else %}
+
                             <a href="{%url 'viewFoodItemToOrder' order_list.id%}"
                                 class="btn btn-info btn-sm btn-circle">
                                 <i class="fas fa-plus"></i>
                             </a>
-                            
+                            {%endif %}
+
 
                         </td>
                     </tr>

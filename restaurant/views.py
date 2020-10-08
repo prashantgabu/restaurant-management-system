@@ -1,10 +1,14 @@
 from django.shortcuts import render, redirect
 from django.http import HttpResponse, request
 from django.contrib.auth import authenticate, login
+from django.db.models.functions import TruncMonth
+from django.db.models import Sum, Count
 from django.contrib import messages
 from . models import *
 import string
 import random
+import json
+import calendar
 
 
 def login(request):
@@ -28,7 +32,41 @@ def login(request):
 
 
 def dashboard(request):
-    return render(request, 'restaurant/dashboard.html')
+
+    # order= Order.objects.all().values_list('createdAt__month').annotate(Sum('totalAmount')).order_by('createdAt__month')
+    order = Order.objects.values('createdAt__month').order_by(
+        'createdAt__month').annotate(sum=Sum('totalAmount'))
+    month_lists = []
+    total_amount_monthly = []
+    print('order', order)
+    for item in order:
+        month_lists.append(calendar.month_name[item['createdAt__month']])
+        total_amount_monthly.append(item['sum'])
+
+    fooditem_list = Food_item.objects.all().order_by('-counter')[:10]
+    # for item in fooditem_list:
+    #     print(item.name)
+
+    total_customers_served_today = Order.objects.filter(
+        createdAt__date=datetime.date.today()).count()
+
+    earnings_till_date = Order.objects.aggregate(Sum('totalAmount'))
+
+    earnings_today = Order.objects.filter(
+        createdAt__date=datetime.date.today()).aggregate(Sum('totalAmount'))
+
+    total_customers_served = Order.objects.all().count()
+    month_list=json.dumps(month_lists)
+    total_amount_monthly2=json.dumps(total_amount_monthly)
+    context = {'total_customers_served': total_customers_served,
+               'total_customers_served_today': total_customers_served_today,
+               'earnings_till_date': earnings_till_date['totalAmount__sum'],
+               "earnings_today": earnings_today['totalAmount__sum'],
+               'fooditem_list': fooditem_list,
+               "month_list": month_list,
+               "total_amount_monthly": total_amount_monthly2}
+
+    return render(request, 'restaurant/dashboard.html', context)
 
 
 def addRestaurant(request):
@@ -183,7 +221,7 @@ def addCustomer(request):
 
 
 def viewCustomer(request):
-    order_list = Order.objects.all()
+    order_list = Order.objects.filter(createdAt__date=datetime.date.today())
     context = {'order_list': order_list}
     return render(request, "restaurant/viewCustomer.html", context)
 
@@ -225,6 +263,19 @@ def generateInvoice(request):
     total_amount = 0
     for item in orderdetails:
         total_amount += int(item.item_price_total)
+    order.totalAmount = total_amount
+    order.invoiceGenerated = 1
+    order.save()
     context = {'invoice_details': 'invoice_details', 'order': order,
                'total_amount': total_amount, 'order_details': orderdetails}
     return render(request, 'restaurant/invoice.html', context)
+
+
+def logout(request):
+    try:
+        del request.session['transaction_id']
+        del request.session['owner_id']
+
+    except KeyError:
+        pass
+    return redirect('login')

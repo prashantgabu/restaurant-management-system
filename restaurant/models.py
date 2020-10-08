@@ -37,6 +37,8 @@ class Order(models.Model):
     transaction_id = models.CharField(max_length=100)
     customer_name = models.CharField(max_length=100)
     createdAt = models.DateTimeField(default=datetime.datetime.now)
+    invoiceGenerated=models.BooleanField(default=False)
+    totalAmount=models.IntegerField(default=0)
     restaurant = models.ForeignKey(Restaurant, on_delete=models.CASCADE)
 
     class Meta:

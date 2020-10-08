@@ -2,6 +2,9 @@
 {% block content %}
 
 <div class="p-5">
+    <div class="text-right">
+        <a href="{%url 'viewCustomer'%}" class="btn btn-primary">View Customers</a>
+    </div>
     <form class="user" method="post" action="{%url 'addCustomer'%}">
         {%csrf_token %}
         <div class="form-group">

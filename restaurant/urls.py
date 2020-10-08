@@ -24,6 +24,5 @@ urlpatterns = [
     path('viewFoodItemToOrder/<int:id>', views.viewFoodItemToOrder, name="viewFoodItemToOrder"),
     path('addFoodItemToOrder/<int:id>', views.addFoodItemToOrder, name="addFoodItemToOrder"),
     path('generateInvoice', views.generateInvoice, name="generateInvoice"),
-
-
+    path('logout', views.logout, name="logout"),
 ]
