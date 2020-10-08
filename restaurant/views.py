@@ -34,14 +34,17 @@ def login(request):
 def dashboard(request):
 
     # order= Order.objects.all().values_list('createdAt__month').annotate(Sum('totalAmount')).order_by('createdAt__month')
-    order = Order.objects.values('createdAt__month').order_by(
-        'createdAt__month').annotate(sum=Sum('totalAmount'))
-    month_lists = []
-    total_amount_monthly = []
+    order = Order.objects.values('restaurant').order_by(
+        'restaurant').annotate(sum=Sum('totalAmount'))
     print('order', order)
+    res_total = []
     for item in order:
-        month_lists.append(calendar.month_name[item['createdAt__month']])
-        total_amount_monthly.append(item['sum'])
+        if item not in res_total:
+            restaurant = Restaurant.objects.get(id=item['restaurant'])
+            print("Restaurant", restaurant)
+            item['restaurant'] = restaurant.name
+            res_total.append(item)
+    print(res_total)
 
     fooditem_list = Food_item.objects.all().order_by('-counter')[:10]
     # for item in fooditem_list:
@@ -56,16 +59,20 @@ def dashboard(request):
         createdAt__date=datetime.date.today()).aggregate(Sum('totalAmount'))
 
     total_customers_served = Order.objects.all().count()
-    month_list=json.dumps(month_lists)
-    total_amount_monthly2=json.dumps(total_amount_monthly)
+    # month_list=json.dumps(month_lists)
+    # print(type(month_list))
+    # print(month_list)
+    # total_amount_monthly2=json.dumps(total_amount_monthly)
+    # print(type(total_amount_monthly2))
+    # print(total_amount_monthly2)
+
     context = {'total_customers_served': total_customers_served,
                'total_customers_served_today': total_customers_served_today,
                'earnings_till_date': earnings_till_date['totalAmount__sum'],
                "earnings_today": earnings_today['totalAmount__sum'],
                'fooditem_list': fooditem_list,
-               "month_list": month_list,
-               "total_amount_monthly": total_amount_monthly2}
-
+               'res_total': res_total
+               }
     return render(request, 'restaurant/dashboard.html', context)
 
 
